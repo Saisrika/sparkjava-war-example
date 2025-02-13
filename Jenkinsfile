@@ -6,9 +6,21 @@ pipeline {
     stages{
       stage('build') {
             steps {
-               sh 'mvn clean install'
+               sh 'mvn clean deploy'
             }
         }
-        
-    }
+      stage ('SonarQube analysis') {
+            environment {
+               scannerHome = tool 'Sai-SonarQube-scanner'
+
+            }
+            steps {
+                 withSonarQubeEnv('Sai-SonarQube-server'){
+                     
+                      sh "${scannerHome}/bin/sonar-scanner"
+              }
+        }
+
+     }
+  }
 }
